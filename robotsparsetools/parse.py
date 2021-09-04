@@ -11,7 +11,7 @@ class error(BaseException):
     class NotURLError(Exception):
         pass
 
-class Parse (dict):
+class Parse(dict):
     def __init__(self, url, requests=False, **kwargs):
         """
         Parse robots.txt and returns a Parse instance.
@@ -34,6 +34,13 @@ class Parse (dict):
         else:
             raise error.NotURLError(f"'{url}' is not url")
 
+    def _delete_query(self, url):
+        question = url.find("?")
+        if 0 < question:
+            return url[:question]
+        else:
+            return url
+
     def Allow(self, useragent="*"):
         """
         Get allow list from robots.txt.
@@ -52,6 +59,11 @@ class Parse (dict):
         if data:
             return data.get("Disallow")
 
+    def delay(self, useragent="*"):
+        data = self.get(useragent)
+        if data:
+            return data.get("Crawl-delay")
+
     def can_crawl(self, url, useragent="*"):
         """
         Returns True if crawl is allowed, False otherwise.
@@ -61,13 +73,15 @@ class Parse (dict):
         if not url.startswith(self.home):
             return True
         disallow = self.Disallow(useragent)
-        allow = self.Allow(useragent) or ['']
+        allow = self.Allow(useragent)
         link = url[len(self.home):]
-        if disallow:
-            for d, a in product(disallow, allow):
-                if link.startswith(a) or re.match(rf".*{a}.*", link):
+        if allow:
+            for a in map(self._delete_query, allow):
+                if a != "/" and (link.startswith(a) or re.match(rf".*{a}.*", link)):
                     return True
-                if link.startswith(d) or re.match(rf".*{d}.*", link):
+        if disallow:
+            for d in map(self._delete_query, disallow):
+                if d != "/" and (link.startswith(d) or re.match(rf".*{d}.*", link)):
                     return False
         return True
                 
@@ -99,6 +113,11 @@ def parse(info):
         if i.startswith("User-agent: "):
             useragent = i[12:]
             datas[useragent] = {}
+        elif i.startswith("Sitemap: "):
+            url = i[9:]
+            if "Sitemap" not in datas:
+                datas["Sitemap"] = []
+            datas["Sitemap"].append(url)
         else:
             split = i.split(": ")
             name = split[0]

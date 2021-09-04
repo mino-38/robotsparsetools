@@ -7,5 +7,6 @@ setup(
     author="minomushi",
     url="https://github.com/mino-38/robotsparsetools",
     packages=["robotsparsetools"],
+    keywords="robots.txt parser",
     licence="MIT"
 )
