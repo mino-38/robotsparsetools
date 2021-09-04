@@ -1,15 +1,9 @@
 from urllib.request import urlopen
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
+from .error import NotFoundError, NotURLError
 from urllib.parse import urljoin, urlparse
 from itertools import product
 import re
-
-class error(BaseException):
-    class NotFoundError(Exception):
-        pass
-    
-    class NotURLError(Exception):
-        pass
 
 class Parse(dict):
     def __init__(self, url, requests=False, **kwargs):
@@ -32,7 +26,7 @@ class Parse(dict):
         if parsed.scheme:
             self.home = f"{parsed.scheme}://{parsed.netloc}"
         else:
-            raise error.NotURLError(f"'{url}' is not url")
+            raise NotURLError(f"'{url}' is not url")
 
     def _delete_query(self, url):
         question = url.find("?")
@@ -94,13 +88,17 @@ def request(url, *, use_requests=False, option={}):
     try:
         if use_requests:
             import requests
-            result = requests.get(url, **option).text
+            r = requests.get(url, **option)
+            if 400 <= r.status_code:
+                raise NotFoundError(f"Status code {r.status_code} was returned")
+            else:
+                result = r.text
         else:
-            with urlopen(url) as r:
+            with urlopen(url, **option) as r:
                 result = r.read().decode()
         return result
-    except URLError:
-        raise error.NotFoundError(f"'{url}' is not found")
+    except (URLError, HTTPError) as e:
+        raise NotFoundError(e)
 
 def parse(info):
     """
