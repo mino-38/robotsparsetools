@@ -1,5 +1,5 @@
 # robotsparsetools
-robots.txt is important when scraping website  
+robots.txt is important when crawling website  
 
 This module will help you parse robots.txt
 
