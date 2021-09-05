@@ -28,13 +28,6 @@ class Parse(dict):
         else:
             raise NotURLError(f"'{url}' is not url")
 
-    def _delete_query(self, url):
-        question = url.find("?")
-        if 0 < question:
-            return url[:question]
-        else:
-            return url
-
     def Allow(self, useragent="*"):
         """
         Get allow list from robots.txt.
@@ -58,6 +51,10 @@ class Parse(dict):
         if data:
             return data.get("Crawl-delay")
 
+    def _query_rep(self, url):
+        string = url.split("?")
+        return r"\?".join(string)
+
     def can_crawl(self, url, useragent="*"):
         """
         Returns True if crawl is allowed, False otherwise.
@@ -68,14 +65,23 @@ class Parse(dict):
             return True
         disallow = self.Disallow(useragent)
         allow = self.Allow(useragent)
-        link = url[len(self.home):]
         if allow:
-            for a in map(self._delete_query, allow):
-                if a != "/" and (link.startswith(a) or re.match(rf".*{a}.*", link)):
+            for a in map(self._query_rep, allow):
+                if a[-1] in {"/", "*", "$", "?"}:
+                    pattern = re.compile(rf"^{urljoin(self.home, a)}.*")
+                else:
+                    pattern = re.compile(rf"^{urljoin(self.home, a)}$")
+                if a != "/" and pattern.match(url):
                     return True
         if disallow:
-            for d in map(self._delete_query, disallow):
-                if d != "/" and (link.startswith(d) or re.match(rf".*{d}.*", link)):
+            for d in map(self._query_rep, disallow):
+                if d[-1] in {"/", "*", "$"}:
+                    pattern = re.compile(rf"^{urljoin(self.home, d)}.*")
+                elif d[-1] == "?":
+                    pattern = re.compile(r"{}\?".format(urljoin(self.home, d.rstrip(r"\?"))))
+                else:
+                    pattern = re.compile(rf"^{urljoin(self.home, d)}$")
+                if d != "/" and pattern.match(url):
                     return False
         return True
                 

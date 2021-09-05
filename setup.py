@@ -7,7 +7,7 @@ setup(
     name="robotsparsetools",
     description="Parse robots.txt",
     long_description=long_description,
-    version="1.0.0",
+    version="1.1.0",
     author="minomushi",
     author_email="mino3@cocoro.uk",
     url="https://github.com/mino-38/robotsparsetools",
@@ -15,7 +15,7 @@ setup(
     keywords="robots.txt parser",
     licence="MIT",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3 :: Only"
     ]
 )
