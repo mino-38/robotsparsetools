@@ -73,7 +73,7 @@ class Parse(dict):
                     pattern = re.compile(r"{}\?".format(urljoin(self.home, a.rstrip(r"\?"))))
                 else:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}$")
-                if a != "/" and pattern.match(url):
+                if pattern.match(url):
                     return True
         if disallow:
             for d in map(self._query_rep, disallow):
@@ -83,7 +83,7 @@ class Parse(dict):
                     pattern = re.compile(r"{}\?".format(urljoin(self.home, d.rstrip(r"\?"))))
                 else:
                     pattern = re.compile(rf"^{urljoin(self.home, d)}$")
-                if d != "/" and pattern.match(url):
+                if pattern.match(url):
                     return False
         return True
                 
