@@ -7,6 +7,7 @@ setup(
     name="robotsparsetools",
     description="Parse robots.txt",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     version="1.1.0",
     author="minomushi",
     author_email="mino3@cocoro.uk",
