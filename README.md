@@ -22,7 +22,7 @@ p.Allow(useragent)
 # Get disallow list
 p.Disallow(useragent)
 
-# Get value of Crawl-delay
+# Get value of Crawl-delay(Return value is int or None)
 p.delay(useragent)
 
 # Find out if crawls are allowed

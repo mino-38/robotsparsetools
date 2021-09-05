@@ -49,7 +49,10 @@ class Parse(dict):
     def delay(self, useragent="*"):
         data = self.get(useragent)
         if data:
-            return data.get("Crawl-delay")
+            try:
+                return int(data.get("Crawl-delay"))
+            except (TypeError, ValueError):
+                return None
 
     def _query_rep(self, url):
         string = url.split("?")
