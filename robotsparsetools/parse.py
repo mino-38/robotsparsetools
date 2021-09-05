@@ -67,8 +67,10 @@ class Parse(dict):
         allow = self.Allow(useragent)
         if allow:
             for a in map(self._query_rep, allow):
-                if a[-1] in {"/", "*", "$", "?"}:
+                if a[-1] in {"/", "*", "$"}:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}.*")
+                elif a[-1] == "?":
+                    pattern = re.compile(r"{}\?".format(urljoin(self.home, a.rstrip(r"\?"))))
                 else:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}$")
                 if a != "/" and pattern.match(url):
