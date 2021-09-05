@@ -70,7 +70,7 @@ class Parse(dict):
                 if a[-1] in {"/", "*", "$"}:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}.*")
                 elif a[-1] == "?":
-                    pattern = re.compile(r"{}\?".format(urljoin(self.home, a.rstrip(r"\?"))))
+                    pattern = re.compile(r"^{}\?".format(urljoin(self.home, a.rstrip(r"\?"))))
                 else:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}$")
                 if pattern.match(url):
@@ -80,7 +80,7 @@ class Parse(dict):
                 if d[-1] in {"/", "*", "$"}:
                     pattern = re.compile(rf"^{urljoin(self.home, d)}.*")
                 elif d[-1] == "?":
-                    pattern = re.compile(r"{}\?".format(urljoin(self.home, d.rstrip(r"\?"))))
+                    pattern = re.compile(r"^{}\?".format(urljoin(self.home, d.rstrip(r"\?"))))
                 else:
                     pattern = re.compile(rf"^{urljoin(self.home, d)}$")
                 if pattern.match(url):
