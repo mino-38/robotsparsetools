@@ -41,19 +41,7 @@ from robotsparsetools import Parse
 p = Parse(url)
 p["*"]
 p.get("*") # Can also use get method
-```  
-
-## Read(✨ new in 1.2.0)
-By passing the text to the Read function, it will parse that content
-
-```python
-from robotsparsetools import Read
-import requests
-
-url = "URL of robots.txt you want to parse"
-r = requests.get(url)
-p = Read(r.text) # The return value is a Parse instance
-```
+``` 
 
 ## Error Classes
 Also, there are two error classes
