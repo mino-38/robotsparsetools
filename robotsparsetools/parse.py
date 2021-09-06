@@ -2,11 +2,10 @@ from urllib.request import urlopen
 from urllib.error import URLError, HTTPError
 from .error import NotFoundError, NotURLError
 from urllib.parse import urljoin, urlparse
-from itertools import product
 import re
 
 class Parse(dict):
-    def __init__(self, url, requests=False, **kwargs):
+    def __init__(self, url=None, requests=False, text=None, **kwargs):
         """
         Parse robots.txt and returns a Parse instance.
 
@@ -14,11 +13,14 @@ class Parse(dict):
         >>> {'*': ~~}
         >>> Returns the Parse type of description for each User-Agent.
         """
-        if not url.endswith("robots.txt"):
-            url = urljoin(url, "/robots.txt")
-        self._get_home(url)
-        result = request(url, use_requests=requests, option=kwargs)
-        data = parse(result.splitlines())
+        if not isinstance(url, str) and not text:
+            raise TypeError("__init__() missing 1 required positional argument: 'url'")
+        if not text:
+            if not url.endswith("robots.txt"):
+                url = urljoin(url, "/robots.txt")
+            self._get_home(url)
+            text = request(url, use_requests=requests, option=kwargs)
+        data = parse(text.splitlines())
         super().__init__(**data)
 
     def _get_home(self, url):
@@ -90,6 +92,8 @@ class Parse(dict):
                     return False
         return True
                 
+def Read(text):
+    return Parse(text=text)
 
 def request(url, *, use_requests=False, option={}):
     """

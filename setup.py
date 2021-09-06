@@ -8,7 +8,7 @@ setup(
     description="Parse robots.txt",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version="1.1.1",
+    version="1.2.0",
     author="minomushi",
     author_email="mino3@cocoro.uk",
     url="https://github.com/mino-38/robotsparsetools",
