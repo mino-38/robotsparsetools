@@ -3,6 +3,7 @@ from urllib.error import URLError, HTTPError
 from .error import NotFoundError, NotURLError
 from urllib.parse import urljoin, urlparse
 import re
+import os
 
 class Parse(dict):
     def __init__(self, url=None, requests=False, text=None, **kwargs):
@@ -93,7 +94,11 @@ class Parse(dict):
         return True
                 
 def Read(text):
-    return Parse(text=text)
+    if os.path.isfile(text):
+        with open(text, "r") as f:
+            return Parse(text=f.read())
+    else:
+        return Parse(text=text)
 
 def request(url, *, use_requests=False, option={}):
     """

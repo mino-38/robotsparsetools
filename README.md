@@ -43,6 +43,23 @@ p["*"]
 p.get("*") # Can also use get method
 ``` 
 
+## Read(✨ new in 1.2.1)
+You can parse its contents by passing a text or local path to Read
+
+```python
+from robotsparsetools import Read
+import requests
+
+url = "URL of robots.txt you want to parse"
+r = requests.get(url)
+p = Read(r.text)
+
+path = "File path of robots.txt you want to parse"
+p = Read(path)
+```
+
+The return value is a Parse instance
+
 ## Error Classes
 Also, there are two error classes
 
