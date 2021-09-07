@@ -123,19 +123,23 @@ def parse(info):
     for i in info:
         if not i or i.startswith("#"):
             continue
-        if i.startswith("User-agent: "):
-            useragent = i[12:]
+        if i.lower().startswith("user-agent:"):
+            useragent = _get_value(i)
             datas[useragent] = {}
-        elif i.startswith("Sitemap: "):
-            url = i[9:]
+        elif i.lower().startswith("sitemap:"):
+            url = _get_value(i)
             if "Sitemap" not in datas:
                 datas["Sitemap"] = []
             datas["Sitemap"].append(url)
         else:
-            split = i.split(": ")
+            split = i.split(":")
             name = split[0]
-            data = split[1]
+            data = split[1].strip()
             if name not in datas[useragent]:
                 datas[useragent][name] = []
             datas[useragent][name].append(data)
     return datas
+
+def _get_value(name):
+    index = name.find(":")+1
+    return name[index:].strip()
