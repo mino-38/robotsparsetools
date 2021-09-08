@@ -69,3 +69,5 @@ from robotsparsetools import NotURLError, NotFoundError
 
 # License
 This program's license is [MIT](https://github.com/mino-38/robotsparsetools/blob/main/LICENSE)
+
+[![Downloads](https://pepy.tech/badge/robotsparsetools)](https://pepy.tech/project/robotsparsetools)
