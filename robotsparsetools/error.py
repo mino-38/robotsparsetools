@@ -3,3 +3,6 @@ class NotFoundError(Exception):
 
 class NotURLError(Exception):
     pass
+
+class UserAgentExistsError(Exception):
+    pass

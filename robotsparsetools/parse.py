@@ -73,6 +73,7 @@ class Parse(dict):
         allow = self.Allow(useragent)
         if allow:
             for a in map(self._query_rep, allow):
+                a = a.replace("*", ".*")
                 if a[-1] in {"/", "*", "$"}:
                     pattern = re.compile(rf"^{urljoin(self.home, a)}.*")
                 elif a[-1] == "?":
@@ -83,6 +84,7 @@ class Parse(dict):
                     return True
         if disallow:
             for d in map(self._query_rep, disallow):
+                d = d.replace("*", ".*")
                 if d[-1] in {"/", "*", "$"}:
                     pattern = re.compile(rf"^{urljoin(self.home, d)}.*")
                 elif d[-1] == "?":
@@ -142,7 +144,10 @@ def parse(info):
             data = split[1].strip()
             if name not in datas[useragent]:
                 datas[useragent][name] = []
-            datas[useragent][name].append(data)
+            if name == "Crawl-delay":
+                datas[useragent][name] = data
+            else:
+                datas[useragent][name].append(data)
     return datas
 
 def _get_value(name):

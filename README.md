@@ -43,7 +43,7 @@ p["*"]
 p.get("*") # Can also use get method
 ``` 
 
-## Read(✨ new in 1.2.1)
+## Read
 You can parse its contents by passing a text or local path to Read
 
 ```python
@@ -59,6 +59,41 @@ p = Read(path)
 ```
 
 The return value is a Parse instance
+
+## Make(✨ new in 1.3)
+You can easily generate the contents of robots.txt by using this
+
+```python
+from robotsparsetools import Make
+
+base = Make()
+
+base.add_sitemap("https://xxxxxx.com/sitemap.xml")
+all = base.add_useragent("*")
+all.add_disallow("/hoge")
+
+bot = base.add_useragent("bot")
+bot.add_allow(["/example", "/any/*"])
+bot.add_disallow(["/test", "/xxx/"])
+
+path = "File path"
+base.to_file(path) # Output the result to a file
+
+print(base.make()) # Generation
+
+output:
+
+User-agent: *
+Disallow: /hoge
+
+User-agent: bot
+Disallow: /test
+Disallow: /xxx/
+Allow: /example
+Allow: /any/*
+
+Sitemap: https://xxxxxx.com/sitemap.xml
+```
 
 ## Error Classes
 Also, there are two error classes
