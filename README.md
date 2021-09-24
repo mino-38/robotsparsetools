@@ -80,9 +80,11 @@ path = "File path"
 base.to_file(path) # Output the result to a file
 
 print(base.make()) # Generation
+```
 
-output:
+Below is the result of this code
 
+```
 User-agent: *
 Disallow: /hoge
 
