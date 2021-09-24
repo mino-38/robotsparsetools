@@ -98,10 +98,10 @@ Sitemap: https://xxxxxx.com/sitemap.xml
 ```
 
 ## Error Classes
-Also, there are two error classes
+Also, there are three error classes
 
 ```python
-from robotsparsetools import NotURLError, NotFoundError
+from robotsparsetools import NotURLError, NotFoundError, UserAgentExistsError
 ```
 
 # License
