@@ -8,7 +8,7 @@ class Make:
     def add_useragent(self, useragent="*"):
         if isinstance(useragent, str):
             if useragent in self._useragent:
-                raise UserAgentExistsError(f"{useragent} already exists")
+                raise UserAgentExistsError(f"{useragent} has already exists")
             instance = UserAgent()
             self._useragent[useragent] = instance
             return instance
