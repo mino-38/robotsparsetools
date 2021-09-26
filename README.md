@@ -104,6 +104,16 @@ Also, there are three error classes
 from robotsparsetools import NotURLError, NotFoundError, UserAgentExistsError
 ```
 
+## Command line
+You can use rp command
+
+```bash
+$ rp URL # If you do not specify any options, output Y if crawl is allowed, N if not allowed
+$ rp -a URL # Output the Allow list
+$ rp -d URL # Output the Disallow list
+$ rp -c URL # Output the Crawl-delay
+```
+
 # License
 This program's license is [MIT](https://github.com/mino-38/robotsparsetools/blob/main/LICENSE)
 
