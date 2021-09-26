@@ -19,17 +19,10 @@ class Parse(dict):
         if not text:
             if not url.endswith("robots.txt"):
                 url = urljoin(url, "/robots.txt")
-            self._get_home(url)
+            self.home = _get_home(url)
             text = request(url, use_requests=requests, option=kwargs)
         data = parse(text.splitlines())
         super().__init__(**data)
-
-    def _get_home(self, url):
-        parsed = urlparse(url)
-        if parsed.scheme:
-            self.home = f"{parsed.scheme}://{parsed.netloc}"
-        else:
-            raise NotURLError(f"'{url}' is not url")
 
     def Allow(self, useragent="*"):
         """
@@ -38,7 +31,7 @@ class Parse(dict):
         """
         data = self.get(useragent)
         if data:
-            return data.get("Allow")
+            return data.get("allow")
 
     def Disallow(self, useragent="*"):
         """
@@ -47,13 +40,13 @@ class Parse(dict):
         """
         data = self.get(useragent)
         if data:
-            return data.get("Disallow")
+            return data.get("disallow")
 
     def delay(self, useragent="*"):
         data = self.get(useragent)
         if data:
             try:
-                return int(data.get("Crawl-delay"))
+                return data.get("crawl-delay")
             except (TypeError, ValueError):
                 return None
 
@@ -128,24 +121,24 @@ def parse(info):
     """
     datas = {}
     for i in info:
-        if not i or i.startswith("#"):
+        if not i or i.strip().startswith("#"):
             continue
         if i.lower().startswith("user-agent:"):
             useragent = _get_value(i)
             datas[useragent] = {}
         elif i.lower().startswith("sitemap:"):
             url = _get_value(i)
-            if "Sitemap" not in datas:
-                datas["Sitemap"] = []
-            datas["Sitemap"].append(url)
+            if "sitemap" not in datas:
+                datas["sitemap"] = []
+            datas["sitemap"].append(url)
         else:
             split = i.split(":")
-            name = split[0]
+            name = split[0].lower()
             data = split[1].strip()
             if name not in datas[useragent]:
                 datas[useragent][name] = []
-            if name == "Crawl-delay":
-                datas[useragent][name] = data
+            if name == "crawl-delay":
+                datas[useragent][name] = int(data)
             else:
                 datas[useragent][name].append(data)
     return datas
@@ -153,3 +146,10 @@ def parse(info):
 def _get_value(name):
     index = name.find(":")+1
     return name[index:].strip()
+
+def _get_home(url):
+    parsed = urlparse(url)
+    if parsed.scheme:
+        return f"{parsed.scheme}://{parsed.netloc}"
+    else:
+        raise NotURLError(f"'{url}' is not url")
